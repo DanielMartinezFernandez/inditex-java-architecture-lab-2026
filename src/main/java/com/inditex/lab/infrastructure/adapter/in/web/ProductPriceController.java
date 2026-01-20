@@ -10,15 +10,42 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * REST controller exposing endpoints related to product prices.
+ * Provides read-only access to the applicable price for a given product, brand and search date.
+ * <br>
+ * Author email reflects code ownership for traceability in this exercise repository.
+ *
+ * @author dmf.api@gmail.com
+ * @version 1.0
+ * @since 21
+ */
 @RestController
 @RequestMapping("/api/products")
 public class ProductPriceController {
 
     /**
+     * Returns the applicable price for a given product and brand at a specific date and time.
+     * <p>
+     * This endpoint matches the OpenAPI contract defined at
+     * {@code GET /products/{product-id}/prices} and expects:
+     * </p>
+     * <ul>
+     *   <li><b>product-id</b> (path): Product identifier.</li>
+     *   <li><b>brand-id</b> (query): Brand identifier.</li>
+     *   <li><b>search-date</b> (query): ISO-8601 date-time for which the price is requested (e.g. {@code 2020-06-14T10:00:00}).</li>
+     * </ul>
+     * <p>
+     * On success, it returns HTTP 200 with a JSON body containing the price information
+     * (product-id, brand-id, price-id, init-date, expiration-date, price, currency).
+     * Possible error outcomes according to the contract include 400 (invalid request),
+     * 404 (no price found) and 500 (server error).
+     * </p>
      *
-     * @param searchDate Date of the price sought
-     * @param productId Product identifier
-     * @param brandId Retail brand
+     * @param productId   Product identifier (path variable "product-id").
+     * @param brandId     Brand identifier (query parameter "brand-id").
+     * @param searchDate  Date-time for which the price is requested (query parameter "search-date", ISO-8601 format).
+     * @return HTTP 200 with the applicable price details as {@link PriceResponseDTO}.
      */
     @GetMapping(value ="/{product-id}/prices",
             produces = MediaType.APPLICATION_JSON_VALUE)
