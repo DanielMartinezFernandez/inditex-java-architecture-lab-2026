@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: inditex-architecture-lab
+  mvc:
+    problemdetails:
+      enabled: true
+# The default port is 8080, change it if you want
+# server.port=8080
+server:
+  servlet:
+    context-path: /inditex
+
+# Documentation settings
+springdoc:
+  api-docs:
+    # Ruta estándar para OpenAPI en springdoc 2.x
+    path: /v3/api-docs
+  swagger-ui:
+    # UI accesible en /inditex/swagger-ui.html
+    path: /swagger-ui.html
+    # Cargar la especificación OpenAPI desde el YAML proporcionado
+    url: /openapi/openapi.yaml
+    # Evita intentar cargar la URL por defecto y reduce warnings de paths
+    disable-swagger-default-url: true
