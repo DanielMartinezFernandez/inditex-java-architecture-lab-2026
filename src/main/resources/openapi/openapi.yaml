@@ -1,0 +1,148 @@
+openapi: 3.0.3
+info:
+  title: Inditex Architecture Lab 2026 - Price API
+  description: API to query product prices by brand and date.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/inditex/api
+paths:
+  /products/{product-id}/prices:
+    get:
+      summary: Get the applicable price for a product of a brand for a specific date.
+      parameters:
+        - name: product-id
+          in: path
+          required: true
+          description: Product identifier.
+          schema:
+            type: integer
+            format: int64
+            example: 35455
+        - name: brand-id
+          in: query
+          required: true
+          description: Brand identifier.
+          schema:
+            type: integer
+            format: int64
+            example: 1234
+        - name: search-date
+          in: query
+          required: true
+          description: Date for which the price is requested.
+          schema:
+            type: string
+            format: date-time
+          example: "2020-06-14T10:00:00"
+      responses:
+        '200':
+          description: Price found successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceResponse'
+              examples:
+                sample:
+                  value:
+                    product-id: 35455
+                    brand-id: 1234
+                    price-id: 5678
+                    init-date: "2020-06-14T00:00:00"
+                    expiration-date: "2020-06-15T23:59:59"
+                    price: 35.50
+                    currency: EUR
+        '400':
+          description: Invalid request (missing or improperly formatted parameters).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No price found for the given criteria
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    PriceResponse:
+      type: object
+      required:
+        - product-id
+        - brand-id
+        - price-id
+        - init-date
+        - expiration-date
+        - price
+        - currency
+      properties:
+        product-id:
+          type: integer
+          format: int64
+          example: 35455
+          description: Product identifier.
+        brand-id:
+          type: integer
+          format: int64
+          example: 1234
+          description: Brand identifier.
+        price-id:
+          type: integer
+          format: int64
+          example: 5678
+          description: Price identifier.
+        init-date:
+          type: string
+          format: date-time
+          example: "2020-06-12T10:00:00"
+          description: Effective start date of the price.
+        expiration-date:
+          type: string
+          format: date-time
+          example: "2020-06-14T10:00:00"
+          description: Price expiration date.
+        price:
+          type: number
+          multipleOf: 0.01
+          minimum: 0
+          example: 35.50
+          description: Monetary amount with exactly two decimal places.
+        currency:
+          type: string
+          pattern: "^[A-Z]{3}$"
+          example: EUR
+          description: "ISO 4217 currency code (ex: EUR, USD, GBP)."
+    ErrorResponse:
+      type: object
+      description: RFC 7807 Problem Details.
+      required:
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          description: A URI that identifies the type of problem.
+          example: "https://api.yourcompany.com/errors/not-found"
+        title:
+          type: string
+          description: A short, human-readable summary of the error.
+          example: "Resource not found"
+        status:
+          type: integer
+          description: The HTTP status code (repeated here for convenience).
+          example: 404
+        detail:
+          type: string
+          description: A detailed explanation of what went wrong.
+          example: "There is no price for product 35455 on the specified date."
+        instance:
+          type: string
+          description: The URI that originated the error.
+          example: "/inditex/api/products/35455/prices"
