@@ -37,7 +37,8 @@ public class ProductPriceController {
      * <ul>
      *   <li><b>product-id</b> (path): Product identifier.</li>
      *   <li><b>brand-id</b> (query): Brand identifier.</li>
-     *   <li><b>search-date</b> (query): ISO-8601 date-time for which the price is requested (e.g. {@code 2020-06-14T10:00:00}).</li>
+     *   <li><b>search-date</b> (query): ISO-8601 date-time for which the price is requested
+     *   (e.g. {@code 2020-06-14T10:00:00}).</li>
      * </ul>
      * <p>
      * On success, it returns HTTP 200 with a JSON body containing the price information
@@ -64,7 +65,7 @@ public class ProductPriceController {
             @NotNull
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime searchDate){
-         // Respuesta de ejemplo construida a partir de los datos de entrada
+         //TODO Respuesta de ejemplo construida a partir de los datos de entrada
         LocalDateTime init = searchDate.minusDays(1);
         LocalDateTime end = searchDate.plusDays(1);
         return ResponseEntity.ok(new PriceResponseDTO(

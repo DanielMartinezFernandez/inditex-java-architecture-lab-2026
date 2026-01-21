@@ -4,6 +4,11 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/sql/schema.sql
+      data-locations: classpath:db/sql/data.sql
 # The default port is 8080, change it if you want
 # server.port=8080
 server:
